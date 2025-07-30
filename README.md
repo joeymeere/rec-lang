@@ -2,7 +2,7 @@
 
 ## Overview
 
-REL is a typed configuration language that combines YAML-like readability with strict type safety and validation. It uses curly braces for structure instead of indentation.
+REC (or "Really Easy Config" for short) is a typed configuration language that combines emulates the brevity of YAML, the structure of JSON, and the strict type safety + validation you'd get with a modern programming lanugage like Rust.
 
 ## File Extension
 
@@ -12,7 +12,7 @@ REL is a typed configuration language that combines YAML-like readability with s
 
 ### Key-Value Pairs
 
-```rel
+```rec
 {
   name: "My Application"
   port: 8080
@@ -20,24 +20,9 @@ REL is a typed configuration language that combines YAML-like readability with s
 }
 ```
 
-### Nested Objects
-
-```rel
-{
-  server: {
-    host: "0.0.0.0"
-    port: 8080
-  }
-  database: {
-    url: "postgresql://localhost/mydb"
-    pool_size: 10
-  }
-}
-```
-
 ### Arrays
 
-```rel
+```rec
 {
   allowed_origins: ["http://localhost:3000", "https://example.com"]
   ports: [8080, 8081, 8082]
@@ -46,7 +31,7 @@ REL is a typed configuration language that combines YAML-like readability with s
 
 ## Type System
 
-### Basic Types
+### Core Primitives
 
 - `string`: Text values in quotes
 - `int`: Integer numbers
@@ -54,12 +39,12 @@ REL is a typed configuration language that combines YAML-like readability with s
 - `bool`: `true` or `false`
 - `null`: Null value
 
-### Extended Types
+### Extended Primitives
 
 #### Enums
 
-Simple enums (unit variants):
-```rel
+Unit enums:
+```rec
 @enum LogLevel {
   DEBUG
   INFO
@@ -72,8 +57,8 @@ Simple enums (unit variants):
 }
 ```
 
-Enums with struct variants:
-```rel
+Struct Enums:
+```rec
 @enum DatabaseConnection {
   Postgres { host: string, port: int, database: string, ssl: bool }
   MySQL { host: string, port: int, database: string }
@@ -108,8 +93,8 @@ Enums with struct variants:
 }
 ```
 
-Enums with tuple variants:
-```rel
+Tuple Enums
+```rec
 @enum CacheStrategy {
   NoCache
   FixedTTL(int)  // TTL in seconds
@@ -123,36 +108,36 @@ Enums with tuple variants:
 }
 ```
 
-#### URLs
+#### HTTP/HTTPS URLs
 
-```rel
+```rec
 {
   api_endpoint: url("https://api.example.com")
   webhook: url("http://localhost:3000/webhook")
 }
 ```
 
-#### IPv4 Socket Addresses
+#### IPv4 Sockets
 
-```rel
+```rec
 {
   bind_address: socket("127.0.0.1:8080")
   redis_server: socket("192.168.1.100:6379")
 }
 ```
 
-#### Base58 Pubkeys (Solana)
+#### ed25519 Pubkeys (Base58)
 
-```rel
+```rec
 {
   wallet_address: pubkey("11111111111111111111111111111111")
   program_id: pubkey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA")
 }
 ```
 
-## Type Annotations
+## Types
 
-```rel
+```rec
 @type ServerConfig {
   host: string
   port: int
@@ -170,11 +155,11 @@ Enums with tuple variants:
 }
 ```
 
-## Include Statements
+## Include Statements (external files)
 
-```rel
-#include "common/database.rel"
-#include "secrets/api_keys.rel"
+```rec
+#include "common/database.rec"
+#include "secrets/api_keys.rec"
 
 {
   app_name: "MyService"
@@ -182,23 +167,10 @@ Enums with tuple variants:
 }
 ```
 
-## Comments
+## Example
 
-```rel
-{
-  // Single line comment
-  name: "MyApp"
-  
-  /* Multi-line
-     comment */
-  port: 8080
-}
-```
-
-## Complete Example
-
-```rel
-#include "common/base.rel"
+```rec
+#include "common/base.rec"
 
 @enum Environment {
   DEVELOPMENT
@@ -243,13 +215,6 @@ Enums with tuple variants:
   }
 }
 ```
-
-## Validation Rules
-
-1. **Type Checking**: All values must match their declared types
-2. **Enum Values**: Only defined enum variants are allowed
-3. **URL Validation**: URLs must be valid HTTP/HTTPS URLs
-4. **Socket Validation**: Must be valid IPv4:port format
 5. **Pubkey Validation**: Must be valid Base58 encoded 32-byte ed25519 public keys
 6. **Required Fields**: Non-optional fields must be present
 7. **No Duplicate Keys**: Keys must be unique within their scope
