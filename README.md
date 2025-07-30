@@ -215,6 +215,3 @@ Tuple Enums
   }
 }
 ```
-5. **Pubkey Validation**: Must be valid Base58 encoded 32-byte ed25519 public keys
-6. **Required Fields**: Non-optional fields must be present
-7. **No Duplicate Keys**: Keys must be unique within their scope
