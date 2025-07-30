@@ -6,7 +6,7 @@ REC (or "Really Easy Config" for short) is a typed configuration language that c
 
 ## File Extension
 
-`.rel`
+`.rec`
 
 ## Basic Syntax
 
