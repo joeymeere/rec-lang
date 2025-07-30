@@ -1,0 +1,192 @@
+#include "common/base.rec"
+#include "secrets/api_keys.rec"
+
+@enum Environment {
+    DEVELOPMENT,
+    STAGING,
+    PRODUCTION
+}
+
+@enum LogLevel {
+    DEBUG,
+    INFO,
+    WARN,
+    ERROR,
+    FATAL
+}
+
+// Database provider
+@enum DatabaseProvider {
+    POSTGRES,
+    MYSQL,
+    SQLITE,
+    MONGODB
+}
+
+@type ServerConfig {
+    host: string
+    port: int
+    bind_address: socket
+    environment: Environment
+    ssl_enabled: bool
+    ssl_cert?: string  // Optional field
+    ssl_key?: string   // Optional field
+    allowed_origins: [url]
+    cors_enabled: bool
+}
+
+@type DatabaseConfig {
+    provider: DatabaseProvider
+    host: string
+    port: int
+    database_name: string
+    username: string
+    password?: string  // Optional - might come from env
+    max_connections: int
+    connection_timeout_ms: int
+    ssl_mode?: string
+}
+
+@type CacheConfig {
+    enabled: bool
+    ttl_seconds: int
+    max_size_mb: int
+    eviction_policy: string
+}
+
+@type AuthConfig {
+    jwt_secret?: string  // Loaded from environment
+    token_expiry_hours: int
+    refresh_token_days: int
+    admin_pubkeys: [pubkey]
+    allowed_issuers: [url]
+}
+
+@type RateLimitConfig {
+    enabled: bool
+    requests_per_minute: int
+    burst_size: int
+    whitelist_ips: [socket]
+}
+
+{
+    app_name: "Solana DeFi Platform"
+    version: "2.1.0"
+    build_number: 4823
+    server: ServerConfig {
+        host: "0.0.0.0"
+        port: 8080
+        bind_address: socket("0.0.0.0:8080")
+        environment: Environment.DEVELOPMENT
+        ssl_enabled: false
+        allowed_origins: [
+            url("http://localhost:3000"),
+            url("http://localhost:5173"),
+            url("https://app.example.com")
+        ]
+        cors_enabled: true
+    }
+    database: DatabaseConfig {
+        provider: DatabaseProvider.POSTGRES
+        host: "localhost"
+        port: 5432
+        database_name: "solana_defi"
+        username: "app_user"
+        max_connections: 20
+        connection_timeout_ms: 5000
+        ssl_mode: "prefer"
+    }
+    cache: CacheConfig {
+        enabled: true
+        ttl_seconds: 300
+        max_size_mb: 512
+        eviction_policy: "lru"
+    }
+    auth: AuthConfig {
+        token_expiry_hours: 24
+        refresh_token_days: 30
+        admin_pubkeys: [
+            pubkey("DRpbCBMxVnDK7maPM5tGv6MvB3v1sRMC86PZ8okm21hy"),
+            pubkey("2yKgLKJH2Tv9e4Q1qwAeNTSwbGpBJgYFKtSmHeGaBqwT"),
+            pubkey("7xLk17EQQ5KLDLDe44wCmupJKJjTGd8hs3bTXiGWTYfQ")
+        ]
+        allowed_issuers: [
+            url("https://auth.example.com"),
+            url("https://accounts.google.com")
+        ]
+    }
+    rate_limit: RateLimitConfig {
+        enabled: true
+        requests_per_minute: 60
+        burst_size: 10
+        whitelist_ips: [
+            socket("10.0.0.1:0"),
+            socket("10.0.0.2:0"),
+            socket("192.168.1.100:0")
+        ]
+    }
+    solana: {
+        rpc_endpoints: [
+            url("https://api.mainnet-beta.solana.com"),
+            url("https://solana-api.projectserum.com")
+        ]
+        devnet_endpoint: url("https://api.devnet.solana.com")
+        program_id: pubkey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA")
+        fee_payer_pubkey: pubkey("9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM")
+        commitment_level: "confirmed"
+    }
+    logging: {
+        level: LogLevel.INFO
+        format: "json"
+        outputs: ["stdout", "file"]
+        file_path: "/var/log/app/solana-defi.log"
+        rotate_size_mb: 100
+        rotate_keep_files: 5
+        module_levels: {
+            database: LogLevel.WARN
+            http: LogLevel.DEBUG
+            blockchain: LogLevel.INFO
+            auth: LogLevel.ERROR
+        }
+    }
+    features: {
+        new_ui: true
+        beta_trading: false
+        analytics_enabled: true
+        maintenance_mode: false
+        ab_tests: {
+            new_onboarding_flow: 0.5
+            redesigned_dashboard: 0.25
+            experimental_charts: 0.1
+        }
+    }
+    services: {
+        price_feed: url("https://api.coingecko.com/api/v3")
+        webhook_endpoint: url("https://hooks.slack.com/services/XXX/YYY/ZZZ")
+        analytics: url("https://analytics.example.com")
+        notifications: {
+            enabled: true
+            provider: "sendgrid"
+            api_endpoint: url("https://api.sendgrid.com/v3")
+            from_address: "noreply@example.com"
+        }
+    }
+    health_check: {
+        enabled: true
+        endpoint: "/health"
+        check_database: true
+        check_redis: true
+        check_solana_rpc: true
+        timeout_seconds: 10
+    }
+    metrics: {
+        enabled: true
+        endpoint: socket("0.0.0.0:9090")
+        namespace: "solana_defi"
+        labels: {
+            environment: "development"
+            region: "us-east-1"
+            cluster: "main"
+        }
+    }
+}

@@ -1,0 +1,199 @@
+{
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "REC",
+    "patterns": [
+        {
+            "include": "#comments"
+        },
+        {
+            "include": "#includes"
+        },
+        {
+            "include": "#type-definitions"
+        },
+        {
+            "include": "#enum-definitions"
+        },
+        {
+            "include": "#keywords"
+        },
+        {
+            "include": "#strings"
+        },
+        {
+            "include": "#numbers"
+        },
+        {
+            "include": "#booleans"
+        },
+        {
+            "include": "#null"
+        },
+        {
+            "include": "#types"
+        },
+        {
+            "include": "#functions"
+        },
+        {
+            "include": "#enum-variants"
+        },
+        {
+            "include": "#identifiers"
+        }
+    ],
+    "repository": {
+        "comments": {
+            "patterns": [
+                {
+                    "name": "comment.line.double-slash.rec",
+                    "match": "//.*$"
+                },
+                {
+                    "name": "comment.block.rec",
+                    "begin": "/\\*",
+                    "end": "\\*/"
+                }
+            ]
+        },
+        "includes": {
+            "name": "meta.preprocessor.include.rec",
+            "match": "#include\\s+(\"[^\"]*\")",
+            "captures": {
+                "0": {
+                    "name": "keyword.control.import.rec"
+                },
+                "1": {
+                    "name": "string.quoted.double.rec"
+                }
+            }
+        },
+        "type-definitions": {
+            "begin": "(@type)\\s+([A-Z][a-zA-Z0-9_]*)",
+            "beginCaptures": {
+                "1": {
+                    "name": "storage.type.rec"
+                },
+                "2": {
+                    "name": "entity.name.type.rec"
+                }
+            },
+            "end": "(?=\\{)",
+            "name": "meta.type.rec"
+        },
+        "enum-definitions": {
+            "begin": "(@enum)\\s+([A-Z][a-zA-Z0-9_]*)",
+            "beginCaptures": {
+                "1": {
+                    "name": "storage.type.enum.rec"
+                },
+                "2": {
+                    "name": "entity.name.type.enum.rec"
+                }
+            },
+            "end": "(?=\\{)",
+            "name": "meta.enum.rec"
+        },
+        "keywords": {
+            "patterns": [
+                {
+                    "name": "keyword.control.rec",
+                    "match": "\\b(true|false|null)\\b"
+                }
+            ]
+        },
+        "strings": {
+            "name": "string.quoted.double.rec",
+            "begin": "\"",
+            "end": "\"",
+            "patterns": [
+                {
+                    "name": "constant.character.escape.rec",
+                    "match": "\\\\."
+                }
+            ]
+        },
+        "numbers": {
+            "patterns": [
+                {
+                    "name": "constant.numeric.float.rec",
+                    "match": "-?\\b[0-9]+\\.[0-9]+\\b"
+                },
+                {
+                    "name": "constant.numeric.integer.rec",
+                    "match": "-?\\b[0-9]+\\b"
+                }
+            ]
+        },
+        "booleans": {
+            "name": "constant.language.boolean.rec",
+            "match": "\\b(true|false)\\b"
+        },
+        "null": {
+            "name": "constant.language.null.rec",
+            "match": "\\bnull\\b"
+        },
+        "types": {
+            "name": "support.type.primitive.rec",
+            "match": "\\b(string|int|float|bool|url|socket|pubkey)\\b"
+        },
+        "functions": {
+            "patterns": [
+                {
+                    "name": "support.function.rec",
+                    "match": "\\b(url|socket|pubkey)(?=\\()"
+                }
+            ]
+        },
+        "enum-variants": {
+            "patterns": [
+                {
+                    "match": "([A-Z][a-zA-Z0-9_]*)\\.([A-Z][A-Z0-9_]*)\\s*\\{",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.enum.rec"
+                        },
+                        "2": {
+                            "name": "constant.other.enum.rec"
+                        }
+                    }
+                },
+                {
+                    "match": "([A-Z][a-zA-Z0-9_]*)\\.([A-Z][A-Z0-9_]*)\\s*\\(",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.enum.rec"
+                        },
+                        "2": {
+                            "name": "constant.other.enum.rec"
+                        }
+                    }
+                },
+                {
+                    "match": "([A-Z][a-zA-Z0-9_]*)\\.([A-Z][A-Z0-9_]*)",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.enum.rec"
+                        },
+                        "2": {
+                            "name": "constant.other.enum.rec"
+                        }
+                    }
+                }
+            ]
+        },
+        "identifiers": {
+            "patterns": [
+                {
+                    "name": "variable.other.property.rec",
+                    "match": "([a-zA-Z_][a-zA-Z0-9_]*)(?=\\s*:)"
+                },
+                {
+                    "name": "entity.name.type.rec",
+                    "match": "\\b[A-Z][a-zA-Z0-9_]*\\b"
+                }
+            ]
+        }
+    },
+    "scopeName": "source.rec"
+}

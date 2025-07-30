@@ -1,0 +1,12 @@
+[unstable]
+next-lockfile-bump = true
+
+[build]
+rustflags = ["-C", "target-cpu=native"]
+
+[target.x86_64-apple-darwin]
+linker = "/usr/local/opt/llvm/bin/ld.lld"
+
+[alias]
+b = "build"
+rel = "build --release"

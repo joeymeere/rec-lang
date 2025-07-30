@@ -1,0 +1,6 @@
+{
+    company_name: "Example Corp"
+    support_email: "support@example.com"
+    terms_url: url("https://example.com/terms")
+    privacy_url: url("https://example.com/privacy")
+}

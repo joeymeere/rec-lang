@@ -1,0 +1,21 @@
+[package]
+name = "rec"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+name = "rec"
+path = "src/lib.rs"
+
+[dependencies]
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
+nom = { workspace = true }
+thiserror = { workspace = true }
+url = { workspace = true }
+base58 = { workspace = true }
+regex = { workspace = true }
+indexmap = { workspace = true, features = ["serde"] }
+
+[dev-dependencies]
+pretty_assertions = "1.4.1"

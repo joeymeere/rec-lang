@@ -1,0 +1,9 @@
+{
+    auth: {
+        jwt_secret: "your-secret-key-here"
+    }
+    services: {
+        sendgrid_api_key: "SG.xxxxx"
+        coingecko_api_key: "CG-xxxxx"
+    }
+}
